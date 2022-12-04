@@ -6,7 +6,7 @@ def getmatrix_chave(key):
     k = 0
     for i in range(tamanho_matrix):
         for j in range(tamanho_matrix):
-            matrix_chave[i][j] = ord(key[k]) 
+            matrix_chave[i][j] = ord(key[k]) % 65
             k += 1
  
 # Função que encripta a mensagem
@@ -21,7 +21,7 @@ def encriptar(vetor_mensagem):
 
 def desencriptar(vetor_mensagem):
     matrix_invertida = np.linalg.inv(matrix_chave)
-    #matrix_cifra = matrix_invertida@vetor_mensagem
+    #matrix_cifra = matrix_invertida@vetor_mensagem % 26
     for i in range(tamanho_matrix):
         for j in range(1):
             matrix_cifra[i][j] = 0
@@ -39,14 +39,14 @@ def HillCipherEncriptar(mensagem, key):
     encriptar(vetor_mensagem)
     mensagem_codificada = []
     for i in range(tamanho_matrix):
-        mensagem_codificada.append(chr(matrix_cifra[i][0] ))
+        mensagem_codificada.append(chr(matrix_cifra[i][0] + 65))
     
     print("Mensagem codificada: ", "".join(mensagem_codificada))
     return "".join(mensagem_codificada)
-def HillCipherdesencriptar(mensagem, key):
+def HillCipherDesencriptar(mensagem, key):
 
     getmatrix_chave(key)
- 
+    
     for i in range(tamanho_matrix):
         vetor_mensagem[i][0] = ord(mensagem[i]) % 65
     desencriptar(vetor_mensagem)
