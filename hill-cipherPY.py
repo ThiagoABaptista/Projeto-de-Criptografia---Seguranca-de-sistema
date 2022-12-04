@@ -6,7 +6,7 @@ def getmatrix_chave(key):
     k = 0
     for i in range(tamanho_matrix):
         for j in range(tamanho_matrix):
-            matrix_chave[i][j] = ord(key[k]) % 65
+            matrix_chave[i][j] = ord(key[k]) 
             k += 1
  
 # Função que encripta a mensagem
@@ -17,27 +17,39 @@ def encriptar(vetor_mensagem):
             for x in range(tamanho_matrix):
                 matrix_cifra[i][j] += (matrix_chave[i][x] *
                                        vetor_mensagem[x][j])
-                print(matrix_chave[i][x] * vetor_mensagem[x][j])
             matrix_cifra[i][j] = matrix_cifra[i][j] % 26
 
 def desencriptar(vetor_mensagem):
+    matrix_invertida = np.linalg.inv(matrix_chave)
+    #matrix_cifra = matrix_invertida@vetor_mensagem
     for i in range(tamanho_matrix):
         for j in range(1):
             matrix_cifra[i][j] = 0
             for x in range(tamanho_matrix):
-                matrix_cifra[i][j] += (matrix_chave[i][x] /
-                                       vetor_mensagem[x][j])
-            matrix_cifra[i][j] = matrix_cifra[i][j] % 26
+                matrix_cifra[i][j] += (matrix_invertida[i][x] * vetor_mensagem[x][j])
+            matrix_cifra[i][j] = int(matrix_cifra[i][j] % 26)
+            print(matrix_cifra[i][j])
     
 def HillCipherEncriptar(mensagem, key):
 
     getmatrix_chave(key)
  
     for i in range(tamanho_matrix):
-        vetor_mensagem[i][0] = ord(mensagem[i]) % 65
- 
+        vetor_mensagem[i][0] = ord(mensagem[i]) 
     encriptar(vetor_mensagem)
+    mensagem_codificada = []
+    for i in range(tamanho_matrix):
+        mensagem_codificada.append(chr(matrix_cifra[i][0] ))
+    
+    print("Mensagem codificada: ", "".join(mensagem_codificada))
+    return "".join(mensagem_codificada)
+def HillCipherdesencriptar(mensagem, key):
+
+    getmatrix_chave(key)
  
+    for i in range(tamanho_matrix):
+        vetor_mensagem[i][0] = ord(mensagem[i]) % 65
+    desencriptar(vetor_mensagem)
     mensagem_codificada = []
     for i in range(tamanho_matrix):
         mensagem_codificada.append(chr(matrix_cifra[i][0] + 65))
@@ -77,7 +89,8 @@ if len(sys.argv) == 4:
             arquivo_codificado.write(texto_codificado)
             arquivo_codificado.close()
         else:
-            texto_descodificado
+            texto_codificado = HillCipherdesencriptar(mensagem,chave)
+            print(texto_codificado)
 else:
     print('Falta parametros na chamada do script')
     print('Sintaxe correta: $<script> <arquivo.txt> <chave> <criptografar ou descriptografar>')
